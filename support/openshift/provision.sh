@@ -18,7 +18,7 @@ function usage() {
     echo " $0 --help"
     echo
     echo "Example:"
-    echo " $0 setup --project-suffix s40d"
+    echo " $0 setup rhdm7-insurance --project-suffix s40d"
     echo
     echo "COMMANDS:"
     echo "   setup                    Set up the demo projects and deploy demo apps"
@@ -162,7 +162,7 @@ KIE_SERVER_PWD=kieserver1!
 case $ARG_DEMO in
     rhdm7-insurance)
 	   # No need to set anything here anymore.
-        DEMO_NAME="Red Hat Decision Manager 7 Insurance Pricing DMN Demo"
+        DEMO_NAME=${PRJ[2]}
 	;;
     *)
         echo "ERROR: Invalid demo name: \"$ARG_DEMO\""
