@@ -56,8 +56,8 @@ Option 1 - Install on your machine
    - observe the response, which lists the KIE Containers deployed on the server and their status (STARTED, STOPPED).
 
 12. We can use the Swagger UI to test our Insurance Pricing DMN Decision Service. In the Swagger UI:
-   - navigate to "Rules evalutation :: BRM"
-   - expand the "POST" operation for resource "/server/containers/instances/{id}"
+   - navigate to "Decision Service :: DMN"
+   - expand the "POST" operation for resource "/server/containers/instances/{id}/dmn"
    - click on "Try it out"
    - set the "id" parameter to the name of the KIE Container that hosts our rules, in this case `insurance-pricing-dmn_1.0.0`.
    - set "Parameter content type" to `application/json`.
