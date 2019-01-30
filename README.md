@@ -17,9 +17,9 @@ There are three options for you to install this project: local, OpenShift and Do
 Software
 --------
 The following software is required to run this demo:
-- [JBoss EAP 7.1 zip](https://developers.redhat.com/download-manager/file/jboss-eap-7.1.0.zip)
-- [Red Hat Decision Manager 7.0.0.GA Decision Central deployable for EAP 7](https://developers.redhat.com/download-manager/file/rhdm-7.0.0.GA-decision-central-eap7-deployable.zip)
-- [Red Hat Decision Manager: KIE-Server 7.0.0.GA deployable for EE7](https://developers.redhat.com/download-manager/file/rhdm-7.0.0.GA-kie-server-ee7.zip)
+- [JBoss EAP 7.2 zip](https://developers.redhat.com/download-manager/file/jboss-eap-7.2.0.zip)
+- [Red Hat Decision Manager 7.2.0.GA Decision Central deployable for EAP 7](https://developers.redhat.com/download-manager/file/rhdm-7.2.0.GA-decision-central-eap7-deployable.zip)
+- [Red Hat Decision Manager: KIE-Server 7.2.0.GA deployable for EE7](https://developers.redhat.com/download-manager/file/rhdm-7.2.0.GA-kie-server-ee7.zip)
 - [7-Zip](http://www.7-zip.org/download.html) (Windows only): to overcome the Windows 260 character path length limit, we need 7-Zip to unzip the Decision Manager deployable.
 
 Option 1 - Install on your machine
@@ -178,7 +178,7 @@ Supporting Articles & Videos
 ----------------------------
 - [Your first DMN Microservice on Red Hat Decision Manager 7](https://upload.wikimedia.org/wikipedia/commons/6/67/Learning_Curve_--_Coming_Soon_Placeholder.png)
 
-- [Getting Started with Red Hat Decision Manager 7](https://upload.wikimedia.org/wikipedia/commons/6/67/Learning_Curve_--_Coming_Soon_Placeholder.png)
+- [Getting Started with Red Hat Decision Manager 7](https://developers.redhat.com/blog/2018/03/19/red-hat-decision-manager-7/)
 
 
 Released versions
