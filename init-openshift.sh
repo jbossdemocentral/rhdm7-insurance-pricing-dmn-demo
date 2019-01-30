@@ -7,7 +7,7 @@ function echo_header() {
   echo "########################################################################"
 }
 
-PRJ_DEMO="rhdm7-qlb-loan"
+PRJ_DEMO="rhdm7-insurance"
 PRJ_DEMO_NAME=$(./support/openshift/provision.sh info $PRJ_DEMO | awk '/Project name/{print $3}')
 
 # Check if the project exists
