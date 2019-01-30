@@ -12,7 +12,7 @@ Function Write-Host-Header($echo) {
   Write-Output "########################################################################"
 }
 
-$PRJ_DEMO="rhdm7-insurance"
+$PRJ_DEMO="rhdm7-qlb-loan"
 $PRJ_DEMO_NAME=((./support/openshift/provision.ps1 info $PRJ_DEMO 2>&1 | Select-String -Pattern "Project name") -split "\s+")[2]
 
 # Check if the project exists
@@ -29,6 +29,6 @@ if ($PRJ_EXISTS) {
   Start-Sleep -s 20
 }
 
-Write-Output "Provisioning Red Hat Decision Manager 7 Install Demo."
+Write-Output "Provisioning Red Hat Decision Manager 7 Demo."
 ./support/openshift/provision.ps1 -command setup -demo $PRJ_DEMO -with-imagestreams
 Write-Output "Setup completed."
