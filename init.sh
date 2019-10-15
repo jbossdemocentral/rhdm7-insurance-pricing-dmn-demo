@@ -158,11 +158,11 @@ echo
 echo "  - enabling demo accounts setup..."
 echo
 $JBOSS_HOME/bin/add-user.sh -a -r ApplicationRealm -u dmAdmin -p redhatdm1! -ro analyst,admin,manager,user,kie-server,kiemgmt,rest-all --silent
-$JBOSS_HOME/bin/add-user.sh -a -r ApplicationRealm -u kieserver -p kieserver1! -ro kie-server --silent
+$JBOSS_HOME/bin/add-user.sh -a -r ApplicationRealm -u kieserver -p kieserver1! -ro kie-server,rest-all --silent
 
 echo "  - setting up demo projects..."
 echo
-# Copy the default (internal) BPMSuite repo's.
+# Copy the default (internal) Decision Manager repo's.
 rm -rf $SERVER_BIN/.niogit && mkdir -p $SERVER_BIN/.niogit && cp -r $SUPPORT_DIR/rhdm7-demo-niogit/* $SERVER_BIN/.niogit
 # Copy the demo project repo.
 if ! $OFFLINE_MODE
