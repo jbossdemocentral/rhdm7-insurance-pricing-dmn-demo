@@ -95,7 +95,7 @@ if (-not ([string]::IsNullOrEmpty($ARG_PROJECT_SUFFIX)))
 
 $PRJ=@("rhdm7-insurance-$PRJ_SUFFIX","RHDM7 Insurance Pricing DMN Demo","Red Hat Decision Manager 7 Insurance Pricing DMN Demo")
 
-$SCRIPT_DIR=$scriptName = $myInvocation.MyCommand.Path
+$SCRIPT_DIR= Split-Path $myInvocation.MyCommand.Path
 
 # KIE Parameters
 $KIE_ADMIN_USER="dmAdmin"
@@ -105,8 +105,10 @@ $KIE_SERVER_CONTROLLER_PWD="kieserver1!"
 $KIE_SERVER_USER="kieserver"
 $KIE_SERVER_PWD="kieserver1!"
 
-$OPENSHIFT_DM7_TEMPLATES_TAG="7.3.0.GA"
-$IMAGE_STREAM_TAG="1.0"
+# Version Configuration Parameters
+$OPENSHIFT_DM7_TEMPLATES_TAG="7.7.0.GA"
+$IMAGE_STREAM_TAG="7.7.0"
+$DM7_VERSION="77"
 
 ################################################################################
 # DEMO MATRIX                                                                  #
@@ -211,7 +213,7 @@ Function Create-Projects() {
 
 Function Import-ImageStreams-And-Templates() {
   Write-Output-Header "Importing Image Streams"
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/rhdm73-image-streams.yaml" $True "Error importing Image Streams" $True
+  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/rhdm$DM7_VERSION-image-streams.yaml" $True "Error importing Image Streams" $True
 
   Write-Output ""
   Write-Output "Fetching ImageStreams from registry."
@@ -219,15 +221,15 @@ Function Import-ImageStreams-And-Templates() {
   Start-Sleep -s 10
 
   #  Explicitly import the images. This is to overcome a problem where the image import gets a 500 error from registry.redhat.io when we deploy multiple containers at once.
-  Call-Oc "import-image rhdm73-decisioncentral-openshift:$IMAGE_STREAM_TAG —confirm -n $($PRJ[0])" $True "Error fetching Image Streams."
-  Call-Oc "import-image rhdm73-kieserver-openshift:$IMAGE_STREAM_TAG —confirm -n $($PRJ[0])" $True "Error fetching Image Streams."
+  Call-Oc "import-image rhdm-decisioncentral-rhel8:$IMAGE_STREAM_TAG —confirm -n $($PRJ[0])" $True "Error fetching Image Streams."
+  Call-Oc "import-image rhdm-kieserver-rhel8:$IMAGE_STREAM_TAG —confirm -n $($PRJ[0])" $True "Error fetching Image Streams."
 
   #Write-Output-Header "Patching the ImageStreams"
   #oc patch is/rhdm73-decisioncentral-openshift --type='json' -p "[{'op': 'replace', 'path': '/spec/tags/0/from/name', 'value': 'registry.access.redhat.com/rhdm-7/rhdm73-decisioncentral-openshift:1.0'}]"
   #oc patch is/rhdm73-kieserver-openshift --type='json' -p "[{'op': 'replace', 'path': '/spec/tags/0/from/name', 'value': 'registry.access.redhat.com/rhdm-7/rhdm73-kieserver-openshift:1.0'}]"
 
   Write-Output-Header "Importing Templates"
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/templates/rhdm73-authoring.yaml" $True "Error importing Template" $True
+  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/templates/rhdm$DM7_VERSION-authoring.yaml" $True "Error importing Template" $True
 
 }
 
@@ -244,8 +246,13 @@ Function Create-Rhn-Secret-For-Pull() {
   $RHN_PASSWORD_SECURED = Read-Host "Enter RHN password" -AsSecureString
   $RHN_EMAIL = Read-Host "Enter e-mail address"
 
-  $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($RHN_PASSWORD_SECURED)
-  $RHN_PASSWORD = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+  if ($PSVersionTable.PSVersion.Major -ge 7 ) {
+      $RHN_PASSWORD = ConvertFrom-SecureString -SecureString $RHN_PASSWORD_SECURED -AsPlainText
+  }
+  else {
+      $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($RHN_PASSWORD_SECURED)
+      $RHN_PASSWORD = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+  }
 
   oc create secret docker-registry red-hat-container-registry --docker-server=registry.redhat.io --docker-username=$RHN_USERNAME --docker-password=$RHN_PASSWORD --docker-email=$RHN_EMAIL
   oc secrets link builder red-hat-container-registry --for=pull
@@ -260,6 +267,8 @@ Function Import-Secrets-And-Service-Account() {
   Call-Oc "create serviceaccount kieserver-service-account" $True "Error creating service account." $True
   Call-Oc "secrets link --for=mount decisioncentral-service-account decisioncentral-app-secret" $True "Error linking decisioncentral-service-account to secret"
   Call-Oc "secrets link --for=mount kieserver-service-account kieserver-app-secret" $True "Error linking kieserver-service-account to secret"
+
+  oc create -f $SCRIPT_DIR/credentials.yaml
 }
 
 Function Create-Application() {
@@ -271,20 +280,20 @@ Function Create-Application() {
     $IMAGE_STREAM_NAMESPACE=$($PRJ[0])
   }
 
-  $argList = "new-app --template=rhdm73-authoring"`
+  $argList = "new-app --template=rhdm$DM7_VERSION-authoring"`
       + " -p APPLICATION_NAME=""$ARG_DEMO""" `
       + " -p IMAGE_STREAM_NAMESPACE=""$IMAGE_STREAM_NAMESPACE""" `
-      + " -p KIE_ADMIN_USER=""$KIE_ADMIN_USER""" `
-      + " -p KIE_ADMIN_PWD=""$KIE_ADMIN_PWD""" `
-      + " -p KIE_SERVER_CONTROLLER_USER=""$KIE_SERVER_CONTROLLER_USER""" `
-      + " -p KIE_SERVER_CONTROLLER_PWD=""$KIE_SERVER_CONTROLLER_PWD""" `
-      + " -p KIE_SERVER_USER=""$KIE_SERVER_USER""" `
-      + " -p KIE_SERVER_PWD=""$KIE_SERVER_PWD""" `
+      + " -p CREDENTIALS_SECRET=""rhdm-credentials""" `
       + " -p DECISION_CENTRAL_HTTPS_SECRET=""decisioncentral-app-secret""" `
       + " -p KIE_SERVER_HTTPS_SECRET=""kieserver-app-secret""" `
       + " -p DECISION_CENTRAL_MEMORY_LIMIT=""2Gi"""
 
   Call-Oc $argList $True "Error creating application." $True
+
+  # Disable the OpenShift Startup Strategy and revert to the old Controller Strategy
+  oc set env dc/$ARG_DEMO-rhdmcentr KIE_WORKBENCH_CONTROLLER_OPENSHIFT_ENABLED=false
+  oc set env dc/$ARG_DEMO-kieserver KIE_SERVER_STARTUP_STRATEGY=ControllerBasedStartupStrategy KIE_SERVER_CONTROLLER_USER=$KIE_SERVER_CONTROLLER_USER KIE_SERVER_CONTROLLER_PWD=$KIE_SERVER_CONTROLLER_PWD KIE_SERVER_CONTROLLER_SERVICE=$ARG_DEMO-rhdmcentr KIE_SERVER_CONTROLLER_PROTOCOL=ws KIE_SERVER_ROUTE_NAME=insecure-$ARG_DEMO-kieserver
+
 }
 
 Function Build-And-Deploy() {
