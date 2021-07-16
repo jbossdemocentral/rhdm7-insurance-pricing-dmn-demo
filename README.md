@@ -6,7 +6,7 @@ using it from an application through the REST API that is exposed by the server.
 
 The DMN model used in this demo is a simple, pre-made, example that calculates the insurance price based on someone's age and their incident history. This is the DRD:
 
-![Insurance Pricing DMN Model](./docs/demo-images/insurance-pricing-dmn-cropped.png)
+![Insurance Pricing DMN Model](./docs/demo-images/insurance-pricing-dmn.png)
 
 The decision logic of the decision node "Insurance total price" is defined in a decision table:
 
