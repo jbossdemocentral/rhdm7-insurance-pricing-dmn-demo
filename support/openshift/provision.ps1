@@ -106,9 +106,9 @@ $KIE_SERVER_USER="kieserver"
 $KIE_SERVER_PWD="kieserver1!"
 
 # Version Configuration Parameters
-$OPENSHIFT_DM7_TEMPLATES_TAG="7.7.0.GA"
-$IMAGE_STREAM_TAG="7.7.0"
-$DM7_VERSION="77"
+$OPENSHIFT_DM7_TEMPLATES_TAG="7.11.0.GA"
+$IMAGE_STREAM_TAG="7.11.0"
+$DM7_VERSION="711"
 
 ################################################################################
 # DEMO MATRIX                                                                  #

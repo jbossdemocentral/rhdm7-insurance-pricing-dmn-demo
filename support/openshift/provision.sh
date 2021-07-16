@@ -157,9 +157,9 @@ KIE_SERVER_USER=kieserver
 KIE_SERVER_PWD=kieserver1!
 
 # Version Configuration Parameters
-OPENSHIFT_DM7_TEMPLATES_TAG=7.7.0.GA
-IMAGE_STREAM_TAG=7.7.0
-DM7_VERSION=77
+OPENSHIFT_DM7_TEMPLATES_TAG=7.11.0.GA
+IMAGE_STREAM_TAG=7.11.0
+DM7_VERSION=711
 
 ################################################################################
 # DEMO MATRIX                                                                  #
@@ -311,6 +311,11 @@ function import_secrets_and_service_account() {
   oc secrets link --for=mount kieserver-service-account kieserver-app-secret
 
     oc create -f $SCRIPT_DIR/credentials.yaml
+
+  echo
+  echo "Setting up secrets link for kieserver user and password..."
+  echo
+  oc create secret generic rhpam-credentials --from-literal=KIE_ADMIN_USER=${KIE_ADMIN_USER} --from-literal=KIE_ADMIN_PWD=${KIE_ADMIN_PWD}
 }
 
 function create_application() {
@@ -328,8 +333,8 @@ function create_application() {
       -p CREDENTIALS_SECRET="rhdm-credentials" \
       -p DECISION_CENTRAL_HTTPS_SECRET="decisioncentral-app-secret" \
       -p KIE_SERVER_HTTPS_SECRET="kieserver-app-secret" \
-      -p DECISION_CENTRAL_MEMORY_LIMIT="2Gi"
-
+      -p DECISION_CENTRAL_MEMORY_LIMIT="4Gi"
+      
   # Disable the OpenShift Startup Strategy and revert to the old Controller Strategy
   oc set env dc/$ARG_DEMO-rhdmcentr KIE_WORKBENCH_CONTROLLER_OPENSHIFT_ENABLED=false
   oc set env dc/$ARG_DEMO-kieserver KIE_SERVER_STARTUP_STRATEGY=ControllerBasedStartupStrategy KIE_SERVER_CONTROLLER_USER=$KIE_SERVER_CONTROLLER_USER KIE_SERVER_CONTROLLER_PWD=$KIE_SERVER_CONTROLLER_PWD KIE_SERVER_CONTROLLER_SERVICE=$ARG_DEMO-rhdmcentr KIE_SERVER_CONTROLLER_PROTOCOL=ws KIE_SERVER_ROUTE_NAME=insecure-$ARG_DEMO-kieserver

@@ -17,9 +17,9 @@ There are three options for you to install this project: local, OpenShift and Do
 Software
 --------
 The following software is required to run this demo:
-- [JBoss EAP 7.2 zip](https://developers.redhat.com/download-manager/file/jboss-eap-7.2.0.zip)
-- [Red Hat Decision Manager 7.7.0.GA Decision Central deployable for EAP 7](https://developers.redhat.com/download-manager/file/rhdm-7.7.0.GA-decision-central-eap7-deployable.zip)
-- [Red Hat Decision Manager: KIE-Server 7.7.0.GA deployable for EE7](https://developers.redhat.com/download-manager/file/rhdm-7.7.0.GA-kie-server-ee7.zip)
+- [JBoss EAP 7.3 zip](https://developers.redhat.com/download-manager/file/jboss-eap-7.3.0.zip)
+- [Red Hat Decision Manager 7.11.0.GA Decision Central deployable for EAP 7](https://developers.redhat.com/download-manager/file/rhdm-7.11.0-decision-central-eap7-deployable.zip)
+- [Red Hat Decision Manager: KIE-Server 7.11.0.GA deployable for EE7](https://developers.redhat.com/download-manager/file/rhdm-7.11.0-kie-server-ee8.zip)
 - [7-Zip](http://www.7-zip.org/download.html) (Windows only): to overcome the Windows 260 character path length limit, we need 7-Zip to unzip the Decision Manager deployable.
 
 Option 1 - Install on your machine
@@ -30,7 +30,7 @@ Option 1 - Install on your machine
 
 3. Run `init.sh` (Linux/macOS) or `init.ps1` (Windows) file.
 
-4. Start Red Hat Decision Manager by running `./target/jboss-eap-7.1/bin/standalone.sh`
+4. Start Red Hat Decision Manager by running `./target/jboss-eap-7.3/bin/standalone.sh`
 
 5. Login to http://localhost:8080/decision-central
 
@@ -48,18 +48,18 @@ Option 1 - Install on your machine
 10. The Decision Server provides a Swagger UI that documents the full RESTful interface exposed by the server at: http://localhost:8080/kie-server/docs
 
 11. In the Swagger UI:
-   - navigate to "KIE Server :: Core"
+   - navigate to "KIE Server and KIE containers"
    - expand the "GET" operation for resource "/server/containers"
    - click on "Try it out"
    - leave the parameters blank and click on "Execute"
    - when asked for credentials use: Username: kieserver, Password: kieserver1!
-   - observe the response, which lists the KIE Containers deployed on the server and their status (STARTED, STOPPED).
+   - observe the response, which lists the KIE Containers deployed on the server and their status (STARTED, STOPPED, DISPOSED).
 
 12. We can use the Swagger UI to test our Insurance Pricing DMN Decision Service. In the Swagger UI:
-   - navigate to "Decision Service :: DMN"
-   - expand the "POST" operation for resource "/server/containers/instances/{id}/dmn"
+   - navigate to "DMN models"
+   - expand the "POST" operation for resource "/server/containers/{containerId}/dmn"
    - click on "Try it out"
-   - set the "id" parameter to the name of the KIE Container that hosts our rules, in this case `insurance-pricing-dmn_1.0.0`.
+   - set the "containerId" parameter to the name of the KIE Container that hosts our rules, in this case `insurance-pricing-dmn`.
    - set "Parameter content type" to `application/json`.
    - set "Response content type" to `application/json`
    - use the following request as the "body" parameter:
@@ -104,7 +104,7 @@ This installation option will install the Decision Manager 7 and Decision Servic
 
 4. Open the project "RHDM7 Insurance Pricing DMN Demo". Open the "Overview". Wait until the 2 pods, "rhdm7-insurance-pricing-dmn-rhdmcentr" and "rhdm7-insurance-pricing-dmn-kieserver" have been deployed.
 
-5. Open the "Applications -> Routes" screen. Click on the "Hostname" value next to "rhdm7-insurance-pricing-dmn-rhdmcentr". This opens the Decision Central console.
+5. Open the "Networking -> Routes" screen. Click on the "Location" value next to "rhdm7-insurance-rhdmcentr". This opens the Decision Central console.
 
 6. Login to Decision Central:
 
@@ -124,8 +124,8 @@ This installation option will install the Decision Manager 7 and Decision Servic
 12. Go to "Menu -> Deploy -> Execution Servers" repository to see the insurance-pricing-dmn_1.0.0 KIE Container deployed on the Decision Server.
 
 13. The Decision Server provides a Swagger UI that documents the full RESTful interface exposed by the server at. To open the Swagger UI, go back to
-the OpenShift console, and go to the "Applications - Routes" screen. Copy the "Hostname" value next to "rhdm7-insurance-pricing-dmn-kieserver". Paste the URL in a browser tab
-and add "/docs" to the URL. This will show the Swagger UI.
+the OpenShift console, and go to the "Networking - Routes" screen. Copy the "Location" value next to "
+rhdm7-insurance-kieserver". Paste the URL in a browser tab and add "/docs" to the URL. This will show the Swagger UI.
 
 14. Follow instructions from above "Option 1- Install on your machine", starting at step 11.
 
@@ -185,24 +185,17 @@ Released versions
 -----------------
 See the tagged releases for the following versions of the product:
 
+- v1.3 Red Hat Decision Manager 7.11.0.GA
 - v1.2 Red Hat Decision Manager 7.7.0.GA
 - v1.1 Red Hat Decision Manager 7.5.0.GA
 - v1.0 Red Hat Decision Manager 7.0.0.GA
 
 ![Red Hat Decision Manager 7](./docs/demo-images/rhdm7.png)
 
-![Insurance Pricing DMN Model](./docs/demo-images/insurance-pricing-dmn-cropped.png)
+![Insurance Pricing DMN Model](./docs/demo-images/insurance-pricing-dmn.png)
 
 <img src="./docs/demo-images/decision-table.png" title="Insurance Pricing Decision Table" width="50%" height="50%"/>
 
-![Project](./docs/demo-images/insurance-pricing-project.png)
-
 ![Execution Server View](./docs/demo-images/execution-server-view.png)
 
-![Swagger UI](./docs/demo-images/kie-server-swagger-ui.png)
 
-![Swagger UI Containers Overview](./docs/demo-images/kie-server-swagger-ui-containers-overview.png)
-
-![Swagger UI Rules Request](./docs/demo-images/kie-server-swagger-ui-rules-request.png)
-
-![Swagger UI Rules Response](./docs/demo-images/kie-server-swagger-ui-rules-response.png)
