@@ -10,7 +10,7 @@ The DMN model used in this demo is a simple, pre-made, example that calculates t
 
 The decision logic of the decision node "Insurance total price" is defined in a decision table:
 
-<img src="./docs/demo-images/decision-table.png" title="Insurance Pricing Decision Table" width="50%" height="50%"/>
+![Insurance Pricing DMN Model](./docs/demo-images/decision-table.png)
 
 There are three options for you to install this project: local, OpenShift and Docker
 
@@ -194,7 +194,7 @@ See the tagged releases for the following versions of the product:
 
 ![Insurance Pricing DMN Model](./docs/demo-images/insurance-pricing-dmn.png)
 
-<img src="./docs/demo-images/decision-table.png" title="Insurance Pricing Decision Table" width="50%" height="50%"/>
+![Insurance Pricing DMN Model](./docs/demo-images/decision-table.png)
 
 ![Execution Server View](./docs/demo-images/execution-server-view.png)
 
